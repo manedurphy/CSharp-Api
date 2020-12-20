@@ -31,6 +31,7 @@ namespace WebAPI
             services.AddControllers();
             services.AddDbContext<WebAPIContext>(options => options.UseMySQL(Environment.GetEnvironmentVariable("MYSQL_CONNECTION")));
             services.AddScoped<IUserRepo, UserRepo>();
+            services.AddScoped<ITodoItemRepo, TodoItemRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

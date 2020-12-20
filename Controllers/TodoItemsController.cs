@@ -14,53 +14,31 @@ namespace WebAPI.Controllers
     [Route("api/todoitems")]
     public class TodoItemsController : ControllerBase
     {
-        private readonly WebAPIContext _context;
-        public TodoItemsController(WebAPIContext context)
+        private readonly ITodoItemRepo _repository;
+        public TodoItemsController(ITodoItemRepo repository)
         {
-            _context = context;
+            _repository = repository;
         }
         
         [HttpPost]
-        public async Task<ActionResult<TodoItem>> Create(TodoItem todoItem)
+        public ActionResult<TodoItem> Add(TodoItem todoItem)
         {
-            TodoItem existingTodo = _context.TodoItems.Where(todo => todo.Name == todoItem.Name).FirstOrDefault();
-            User user = await _context.Users.FindAsync(todoItem.UserId);
-
-            if (user == null)
-            {
-                return NotFound("User could not be found");
-            }
-
-            if (existingTodo != null)
-            {
-                return BadRequest("Task already exists");
-            }
-
-            _context.TodoItems.Add(todoItem);
-            await _context.SaveChangesAsync();
-            
+            _repository.Add(todoItem);
             return CreatedAtAction(nameof(GetById), new { id = todoItem.Id }, todoItem);
 
         }
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult<TodoItem>> GetById(long id)
+        public ActionResult<TodoItem> GetById(long id)
         {
-            TodoItem todoItem = await _context.TodoItems.FindAsync(id);
-
-            if (todoItem == null)
-            {
-                return NotFound();
-            }
-
-            return todoItem;
+            return _repository.GetById(id);
         }
 
         [HttpGet]
-        public List<TodoItem> GetAll()
+        public IEnumerable<TodoItem> GetAll()
         {
-            return _context.TodoItems.ToList();
+            return _repository.GetAll();
         }
     }
 }

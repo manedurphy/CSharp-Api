@@ -13,6 +13,5 @@ namespace WebAPI.Data
             : base(options)
         {
         }
-
     }
 }
