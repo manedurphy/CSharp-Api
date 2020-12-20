@@ -1,41 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Models;
 
 namespace WebAPI.Data
 {
-    public class UserRepo : IUserRepo
+    public class UserRepo : BaseRepository<User>, IUserRepo
     {
-        private readonly WebAPIContext _context;
-        public UserRepo(WebAPIContext context)
+        public UserRepo(WebAPIContext context) : base(context)
         {
-            _context = context;
         }
 
-        public async Task<User> Create(User user)
+        public IEnumerable<User> GetUsersWithTasks()
         {
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            return user;
+            return WebAPIContext.Users.Include(u => u.TodoItems);
         }
 
-        public async Task<User> GetbyId(long Id)
+        public WebAPIContext WebAPIContext
         {
-            return await _context.Users.FindAsync(Id);
+            get { return _context; }
         }
-
-        public async Task<List<User>> GetAll()
-        {
-            return await _context.Users.Include(user => user.TodoItems).ToListAsync();
-        }
-
     }
 }

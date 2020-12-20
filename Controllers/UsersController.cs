@@ -19,23 +19,30 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult<User> Create(User user)
+        public ActionResult<User> Add(User user)
         {
-            _repository.Create(user);
+            _repository.Add(user);
             return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
         }
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult<User>> GetById(long id)
+        public ActionResult<User> GetById(long id)
         {
-            return await _repository.GetbyId(id);
+            return _repository.GetById(id);
         }
 
         [HttpGet]
-        public async Task<List<User>> GetAll()
+        public IEnumerable<User> GetAll()
         {
-            return await _repository.GetAll();
+            return _repository.GetAll();
+        }
+
+        [HttpGet]
+        [Route("todos")]
+        public IEnumerable<User> GetGetUsersWithTasks()
+        {
+            return _repository.GetUsersWithTasks();
         }
     }
 }

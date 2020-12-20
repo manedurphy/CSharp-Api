@@ -5,10 +5,8 @@ using WebAPI.Models;
 
 namespace WebAPI.Data
 {
-    public interface IUserRepo
+    public interface IUserRepo : IRepository<User>
     {
-        Task<User> Create(User user);
-        Task<User> GetbyId(long Id);
-        Task<List<User>> GetAll();
+        IEnumerable<User> GetUsersWithTasks();
     }
 }
