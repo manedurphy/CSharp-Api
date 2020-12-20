@@ -23,6 +23,13 @@ namespace WebAPI.Controllers
         [HttpPost]
         public ActionResult<TodoItem> Add(TodoItem todoItem)
         {
+            var existingTodoItem = _repository.Find(todoItem);
+
+            if (existingTodoItem != null)
+            {
+                return BadRequest("Task with this name already exists");
+            }
+
             _repository.Add(todoItem);
             return CreatedAtAction(nameof(GetById), new { id = todoItem.Id }, todoItem);
 

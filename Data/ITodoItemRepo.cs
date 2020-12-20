@@ -6,5 +6,6 @@ namespace WebAPI.Data
 {
     public interface ITodoItemRepo : IRepository<TodoItem>
     {
+        TodoItem Find(TodoItem todoItem);
     }
 }
